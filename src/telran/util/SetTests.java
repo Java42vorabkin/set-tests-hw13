@@ -3,7 +3,6 @@ package telran.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class SetTests {
 private static final int N_RANDOM_NUMBERS = 10000;
 Integer[] initialNumbers = {
-	10, 20, 40, 60	
+	10, 20, 40, 60, 5, 25, 3, 2, 4, 1	
 };
 Set<Integer> set;
 	@BeforeEach
@@ -24,6 +23,57 @@ Set<Integer> set;
 		fillSetFromArray(set, initialNumbers);
 		
 		
+	}
+	@Test
+	void removeRoot() {
+		Integer expected[] = {
+				1, 2, 3, 4, 5,  20, 25, 40, 60
+		};
+		set.remove(10);
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	
+	@Test
+	void removeJunction() {
+		Integer expected[] = {
+				1, 2,  4, 5, 10, 20, 25, 40, 60
+		};
+		set.remove(3);
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void removeLeaf() {
+		Integer expected[] = {
+				 2, 3, 4, 5, 10, 20, 25, 40, 60
+		};
+		set.remove(1);
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void removeNonJunctionRight() {
+		Integer expected[] = {
+				1, 2, 3, 4, 5, 10,  25, 40, 60
+		};
+		set.remove(20);
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void removeNonJunctionLeft() {
+		Integer expected[] = {
+				1, 2, 3, 4,  10, 20, 25, 40, 60
+		};
+		set.remove(5);
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void removeIfTest() {
+		Integer randomNumbers[] = getRandomNumbers();
+		Set<Integer> setNumbers = new TreeSet<>();
+		fillSetFromArray(setNumbers, randomNumbers);
+		setNumbers.removeIf(n -> n % 2 == 0);
+		for(Integer num: setNumbers) {
+			assertFalse(num % 2 == 0);
+		}
 	}
 
 	private <T> void fillSetFromArray(Set<T> res, T[] array) {
@@ -70,7 +120,7 @@ Set<Integer> set;
 	void treeSetInsensitiveOrderTest () {
 		 String strings[] = {"Boris", "Asaf", "android", "band"};
 		 String expected[] = {"android", "Asaf", "band", "Boris"};
-		 TreeSet<String> treeSet = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+		 TreeSet<String> treeSet = new TreeSet<>((s1, s2)-> s1.compareToIgnoreCase(s2));
 		 fillSetFromArray(treeSet, strings);
 		 assertArrayEquals(expected, getArrayFromSet(treeSet));
 	}
