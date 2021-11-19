@@ -187,4 +187,4 @@ Set<Integer> set;
 		set.retainAll(set);
 		assertArrayEquals(initialNumbers, getArrayFromSet(set));
 	}
-}
+} 
