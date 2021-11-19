@@ -25,12 +25,21 @@ Set<Integer> set;
 		
 	}
 	@Test
-	void removeRoot() {
+	void removeRootJunction() {
 		Integer expected[] = {
 				1, 2, 3, 4, 5,  20, 25, 40, 60
 		};
 		set.remove(10);
 		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void removeRootNonJunction() {
+		Integer input[] = { 1,2,3,4,5};
+		Integer expected[] = {2,3,4,5};
+		Set<Integer> x = new TreeSet<>();
+		fillSetFromArray(x, input);
+		x.remove(1);
+		assertArrayEquals(expected, getArrayFromSet(x));
 	}
 	
 	@Test
@@ -64,6 +73,17 @@ Set<Integer> set;
 		};
 		set.remove(5);
 		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void removeIfTst() {
+		Integer[] expected1 = { 10, 20, 40, 60, 5, 25, 3, 2, 4/*, 1*/};
+		Integer[] expected2 = { 10, 20,  40, /*60,*/ 5, 25, 3, 2, 4/*, 1*/};
+		Arrays.sort(expected1);
+		Arrays.sort(expected2);
+		set.removeIf(n -> n == 1);
+		assertArrayEquals(expected1, getArrayFromSet(set));
+		set.removeIf(n -> n==60);
+		assertArrayEquals(expected2, getArrayFromSet(set));
 	}
 	@Test
 	void removeIfTest() {
@@ -133,6 +153,38 @@ Set<Integer> set;
 		}
 		return res;
 	}
-	
-
+	@Test
+	void removeAllTest() {
+		Set<Integer> other = new TreeSet<>();
+		other.add(4);
+		other.add(25);
+		Integer expected[] = {1, 2, 3, /*4,*/ 5, 10, 20, /*25,*/ 40, 60};
+		set.removeAll(other);
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void removeAllSameTest() {
+		assertTrue(set.removeAll(set));
+		assertArrayEquals(new Integer[0], getArrayFromSet(set));
+	}
+	@Test
+	void clearTest() {
+		set.clear();
+		assertArrayEquals(new Integer[0], getArrayFromSet(set));
+	}
+	@Test
+	void retainAllTest() {
+		Set<Integer> other = new TreeSet<>();
+		other.add(1);
+		other.add(20);
+		Integer expected[] = {1, 20};
+		set.retainAll(other);
+		assertArrayEquals(expected, getArrayFromSet(set));
+	}
+	@Test
+	void retainAllSameTest() {
+		Arrays.sort(initialNumbers);
+		set.retainAll(set);
+		assertArrayEquals(initialNumbers, getArrayFromSet(set));
+	}
 }
